@@ -103,7 +103,7 @@ function splitImageIntoTiles() {
             for (let c = 0; c < TILE; c++) {
                 const rect = new cv.Rect(c * tileW, r * tileH, tileW, tileH);
                 let roi = src.roi(rect);
-                cv.putText(roi, `${r * TILE + c + 1}`, new cv.Point(20, 40), cv.FONT_HERSHEY_SIMPLEX, 1, new cv.Scalar(0,255,0,255), 2);
+                cv.putText(roi, `${r * TILE + c + 1}`, new cv.Point(20, 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0,255,0,255), 1);
                 const tile = src.roi(rect).clone();
                 originalTiles.push(tile);
             }

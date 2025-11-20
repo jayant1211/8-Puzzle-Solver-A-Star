@@ -16,7 +16,6 @@ working principle:
 CAN DO:
 • add keylisteners, use manual keys to move the tile around making it interactive rather just solution
 • Performance stats (time, nodes, solution length)
-• Performance stats (time, nodes, solution length)
 • 8-bit sound effects
 • Save puzzle as JSON/image
 • Load or replay puzzle state
