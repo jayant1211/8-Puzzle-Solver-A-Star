@@ -15,6 +15,12 @@ body {
     flex-direction: column;
     align-items: center;
     color: #222;
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.035) 1px, transparent 1px),
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.9) 0%, rgba(240,240,245,0.7) 100%);
+    background-size: 20px 20px, 20px 20px, 100% 100%;
+    background-position: 0 0, 0 0, center top;
 }
 
 #title {
@@ -45,9 +51,22 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     transition: transform .25s ease, box-shadow .25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.img-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: 
+        linear-gradient(135deg, transparent 45%, rgba(255,255,255,0.15) 50%, transparent 55%),
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .img-section.grid-active {
@@ -56,10 +75,15 @@ body {
     overflow: hidden;
     transform: none !important;
     box-shadow: 0 8px 20px rgba(0,0,0,0.05) !important;
+    background: 
+        linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px),
+        #ffffff;
+    background-size: 66.66px 66.66px;
 }
 
 .img-section.grid-active:hover {
-    transform: none !important;
+    transform: none!;
     box-shadow: 0 8px 20px rgba(0,0,0,0.05) !important;
 }
 
@@ -193,7 +217,6 @@ body {
 
 .social-link:hover {
     transform: translateY(-5px);
-    /* border-color: #000; */
 }
 
 .social-icon {
@@ -209,43 +232,15 @@ body {
     color: #000;
 }
 
-/* Social media brand colors on hover */
-.social-link:hover[aria-label="Email"] {
-    color: #ea4335;
-}
+.social-link:hover[aria-label="Email"] { color: #ea4335; }
+.social-link:hover[aria-label="LinkedIn"] { color: #0077b5; }
+.social-link:hover[aria-label="GitHub"] { color: #333; }
+.social-link:hover[aria-label="X (Twitter)"] { color: #000; }
+.social-link:hover[aria-label="Instagram"] { color: #e4405f; }
 
-.social-link:hover[aria-label="LinkedIn"] {
-    color: #0077b5;
-}
-
-.social-link:hover[aria-label="GitHub"] {
-    color: #333;
-}
-
-.social-link:hover[aria-label="X (Twitter)"] {
-    color: #000;
-}
-
-.social-link:hover[aria-label="Instagram"] {
-    color: #e4405f;
-}
-
-/* Responsive design for contact section */
 @media (max-width: 768px) {
-    .social-icons {
-        gap: 1rem;
-    }
-    
-    .social-link {
-        padding: 0.75rem;
-    }
-    
-    .social-icon {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .contact-text h2 {
-        font-size: 2rem;
-    }
+    .social-icons { gap: 1rem; }
+    .social-link { padding: 0.75rem; }
+    .social-icon { width: 32px; height: 32px; }
+    .contact-text h2 { font-size: 2rem; }
 }
