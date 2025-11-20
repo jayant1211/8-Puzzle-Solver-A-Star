@@ -7,6 +7,9 @@ Drag in an image → tiles auto-extracted → puzzle jumbled with guaranteed sol
 Live demo:  
 **https://a-star-puzzle.netlify.app/**
 
+Check Python CLI Version here:  
+**https://github.com/jayant1211/CLI-8-Puzzle-Solver-using-A-Star**
+
 ---
 
 ## Features
