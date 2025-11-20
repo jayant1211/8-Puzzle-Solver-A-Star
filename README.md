@@ -28,12 +28,11 @@ Jumble to randomise.
 Solve.
 Iterate Steps.
 
-![](rsc/demo1.gif)
+<img src="rsc/demo1.gif" width="450">
 
 Done? Upload New Image.
 
-![](rsc/demo2.gif)
-
+<img src="rsc/demo2.gif" width="450">
 
 ---
 
