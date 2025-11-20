@@ -28,11 +28,11 @@ Jumble to randomise.
 Solve.
 Iterate Steps.
 
-<img src="rsc/demo1.gif" width="450">
+<img src="rsc/demo1.gif" width="300">
 
 Done? Upload New Image.
 
-<img src="rsc/demo2.gif" width="450">
+<img src="rsc/demo2.gif" width="300">
 
 ---
 
