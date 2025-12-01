@@ -8,6 +8,7 @@ const solve_button = document.querySelector('#solve_button');
 const nextBtn = document.querySelector('#next');
 const prevBtn = document.querySelector('#prev');
 const newImgBtn = document.getElementById('new_image');
+const tip = document.querySelector('.tip');
 import { solve, reconstructPath } from "./a_star.js";
 
 let originalTiles = null;
@@ -72,6 +73,8 @@ imageInput.addEventListener('change', (e) => {
         };
 
         jumble.classList.remove('disabled');
+        tip.classList.add('pre-jumble');
+        tip.textContent = 'Once jumbled, you can use arrow keys to try and solve the puzzle :)';
         show();
     };
 });
@@ -196,6 +199,13 @@ jumble.addEventListener("click", () => {
     void postImage.offsetHeight;
     splitImageIntoTiles();
     solve_button.classList.remove('disabled');
+
+    tip.classList.remove('pre-jumble');
+    tip.textContent = 'try solving the puzzle using arrow keys\n& if you get stuck, just solve and navigate using next :)';
+    
+    // else{
+    //     tip.textContent = 'Once jumbled, you can use arrow keys to try and solve the puzzle :)'
+    // }
 });
 
 solve_button.addEventListener("click", () => {
@@ -220,4 +230,36 @@ prevBtn.addEventListener("click", () => {
 
 function onOpenCvReady() {
     console.log('cv loaded');
+}
+
+
+document.addEventListener("keydown", (e) => {
+    const allowed = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+    if (!allowed.includes(e.key)) return;
+
+    if (!intial_state) return;
+
+    moveBlank(e.key);
+});
+
+function moveBlank(key) {
+    let state = [...intial_state];
+
+    const idx = state.indexOf(0);
+    const r = Math.floor(idx / 3);
+    const c = idx % 3;
+
+    let swapWith = -1;
+
+    if (key === "ArrowUp" && r < 2) swapWith = idx + 3;
+    if (key === "ArrowDown" && r > 0) swapWith = idx - 3;
+    if (key === "ArrowLeft" && c < 2) swapWith = idx + 1;
+    if (key === "ArrowRight" && c > 0) swapWith = idx - 1;
+
+    if (swapWith === -1) return;
+
+    [state[idx], state[swapWith]] = [state[swapWith], state[idx]];
+
+    intial_state = state;
+    renderState(state);
 }

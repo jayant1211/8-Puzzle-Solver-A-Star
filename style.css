@@ -132,6 +132,17 @@ body {
     justify-content: space-between;
 }
 
+.tip{
+    white-space: pre-line;
+    font-size: 11px;
+    margin: 20px;
+    color: black;
+}
+
+.pre-jumble{
+    color: rgb(178, 178, 178);
+}
+
 .nav-buttons button, #new_image {
     padding: 8px 20px;
     margin: 2px;
