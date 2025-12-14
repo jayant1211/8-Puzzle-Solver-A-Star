@@ -19,31 +19,43 @@
                 <canvas id="outputCanvas"></canvas>
             </div>
         </div> -->
-        <div class="img-section">
-            <div class="pre-state">
-                <img src="rsc/img-placeholder.png" alt="img-icon" id="img-icon">
-                <p>upload image to start solving the puzzle!</p>
-                <input type="file" accept="image/*" id="imageInput" class="hidden">
+
+        <div class="images">
+            <div class="render-section left hidden" id="render-l"> 
+                <div class="render-text">INITIAL</div>
+                <img src="" alt="" class="curr-state render-img">
+            </div>
+            <div class="img-section">
+                <div class="pre-state">
+                    <img src="rsc/img-placeholder.png" alt="img-icon" id="img-icon">
+                    <p>upload image to start solving the puzzle!</p>
+                    <input type="file" accept="image/*" id="imageInput" class="hidden">
+                </div>
+
+                <canvas id="previewCanvas" class="hidden"></canvas>
+
+                <div class="post-state hidden">
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                    <canvas width="133" height="133" class="tile"></canvas>
+                </div>
             </div>
 
-            <canvas id="previewCanvas" class="hidden"></canvas>
-
-            <div class="post-state hidden">
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
-                <canvas width="133" height="133" class="tile"></canvas>
+            <div class="render-section right hidden" id="render-r">
+                <div class="render-text">GOAL</div>
+                <img src="" alt="" class="original-state render-img">
             </div>
         </div>
 
         <div class="nav-buttons">
             <button id="jumble" class="disabled">Jumble</button>
-            <button id="solve_button" class="disabled">Solve</button>
+            <button id="reset" class="disabled">Reset</button>
             <button id="prev" class="disabled">Previous</button>
             <button id="next" class="disabled">Next</button>
         </div>
@@ -100,5 +112,14 @@
     <script async src="rsc/opencv.js" onload="onOpenCvReady();"></script>
     <!-- <script src="app.js"></script> -->
     <script type="module" src="app.js"></script>
+    <script>
+        document.addEventListener("keydown", function (e) {
+        const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+        if (keys.includes(e.key)) {
+            e.preventDefault();
+        }
+        });
+    </script>
+
 </body>
 </html>

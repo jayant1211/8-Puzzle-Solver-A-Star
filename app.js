@@ -4,11 +4,20 @@ const preImage = document.querySelectorAll('.pre-state');
 const postImage = document.querySelector('.post-state');
 const preCanvas = document.querySelector('#previewCanvas');
 const jumble = document.querySelector('#jumble');
-const solve_button = document.querySelector('#solve_button');
+const reset = document.querySelector('#reset');
 const nextBtn = document.querySelector('#next');
 const prevBtn = document.querySelector('#prev');
 const newImgBtn = document.getElementById('new_image');
 const tip = document.querySelector('.tip');
+let original_url = null;
+let optimalSteps = null;
+let userSteps = 0;
+const renderInfo = document.querySelectorAll('.render-section');
+const renderL = document.querySelector('#render-l');
+const renderR = document.querySelector('#render-r');
+const org_img = document.querySelector('.original-state');
+const curr_img = document.querySelector('.curr-state');
+
 import { solve, reconstructPath } from "./a_star.js";
 
 let originalTiles = null;
@@ -35,7 +44,7 @@ imageInput.addEventListener('change', (e) => {
     preImage.forEach(x => x.classList.remove('hidden'));
 
     jumble.classList.add('disabled');
-    solve_button.classList.add('disabled');
+    // solve_button.classList.add('disabled');
     nextBtn.classList.add('disabled');
     prevBtn.classList.add('disabled');
 
@@ -48,6 +57,7 @@ imageInput.addEventListener('change', (e) => {
     const url = URL.createObjectURL(file);
     const imgEl = new Image();
     imgEl.src = url;
+    original_url = url;
 
     imgEl.onload = () => {
         const show = () => {
@@ -95,6 +105,10 @@ function isSolvable(arr) {
 
 function splitImageIntoTiles() {
     const src = cv.imread(preCanvas);
+    
+    // cv.imshow(org_img, src);
+    org_img.setAttribute('src', original_url)
+    
     const TILE = 3;
     const tileW = preCanvas.width / TILE;
     const tileH = preCanvas.height / TILE;
@@ -137,12 +151,31 @@ function splitImageIntoTiles() {
         temp_intial_state.push(shuffle[i]);
     });
 
+    const snapshotCanvas = document.createElement('canvas');
+    snapshotCanvas.width = TILE * tileW;
+    snapshotCanvas.height = TILE * tileH;
+
+    const sctx = snapshotCanvas.getContext('2d');
+
+    tileCanvases.forEach((tileCanvas, i) => {
+        const x = (i % TILE) * tileW;
+        const y = Math.floor(i / TILE) * tileH;
+        sctx.drawImage(tileCanvas, x, y);
+    });
+
+    curr_img.src = snapshotCanvas.toDataURL('image/png');
+
     intial_state = [];
     for (let i = 0; i < 9; i++) {
         let s = temp_intial_state[i] + 1;
         s = s == 9 ? 0 : s;
         intial_state.push(s);
     }
+
+    // cv.imshow(curr_img, src);
+    renderInfo.forEach((e) => {
+        e.classList.remove('hidden');
+    })
 
     src.delete();
 }
@@ -190,6 +223,27 @@ function goTo(index) {
     syncNavButtons();
 }
 
+function displayLogs() {
+    const oldLog = renderL.querySelector('.log');
+    if (oldLog) oldLog.remove();
+
+    const log_algo = document.createElement('div');
+    log_algo.className = 'log';
+    log_algo.textContent = `This puzzle can be solved in ${optimalSteps - 1} steps`;
+    renderL.appendChild(log_algo);
+}
+
+function displayLogs_user() {
+    const oldLog_user = renderR.querySelector('.log_user');
+    if (oldLog_user) oldLog_user.remove();
+
+    const log_user = document.createElement('div');
+    log_user.className = 'log_user';
+    log_user.textContent = `No of Steps: ${userSteps}`;
+    renderR.appendChild(log_user); 
+}
+
+
 jumble.addEventListener("click", () => {
     if (jumble.classList.contains('disabled')) return;
     preCanvas.classList.add("hidden");
@@ -197,26 +251,45 @@ jumble.addEventListener("click", () => {
     postImage.classList.add("grid");
     document.querySelector('.img-section').classList.add("grid-active");
     void postImage.offsetHeight;
+    // freeze original
+    // original = 
     splitImageIntoTiles();
-    solve_button.classList.remove('disabled');
+    
+    // solve as soon as jumble is clicked
+    const finalState = solve(intial_state, goal_state, log_states);
+    path = reconstructPath(finalState);
+    optimalSteps = path.length;
+    currState = 0;
+    goTo(0);
+
+    displayLogs();
+
+    nextBtn.classList.remove('disabled');
+    
+    // solve_button.classList.remove('disabled');
 
     tip.classList.remove('pre-jumble');
-    tip.textContent = 'try solving the puzzle using arrow keys\n& if you get stuck, just solve and navigate using next :)';
+    tip.textContent = 'try solving the puzzle using arrow keys\n& if you get stuck, just reset and solve using next :)';
     
     // else{
     //     tip.textContent = 'Once jumbled, you can use arrow keys to try and solve the puzzle :)'
     // }
 });
 
-solve_button.addEventListener("click", () => {
-    if (solve_button.classList.contains('disabled')) return;
-    jumble.classList.add('disabled');
-    const finalState = solve(intial_state, goal_state, log_states);
-    path = reconstructPath(finalState);
-    currState = 0;
-    goTo(0);
+// solve_button.addEventListener("click", () => {
+//     if (solve_button.classList.contains('disabled')) return;
+//     jumble.classList.add('disabled');
+    
+// });
+
+reset.addEventListener("click", () => {
+    if (reset.classList.contains('disabled')) return;
     nextBtn.classList.remove('disabled');
-});
+    userSteps = 0;
+    const oldLog_user = renderR.querySelector('.log_user');
+    if (oldLog_user) oldLog_user.remove();
+    goTo(0);
+})
 
 nextBtn.addEventListener("click", () => {
     if (nextBtn.classList.contains("disabled")) return;
@@ -243,7 +316,12 @@ document.addEventListener("keydown", (e) => {
 });
 
 function moveBlank(key) {
+    reset.classList.remove('disabled');
+    nextBtn.classList.add('disabled');
     let state = [...intial_state];
+
+    userSteps += 1;
+    displayLogs_user(userSteps);
 
     const idx = state.indexOf(0);
     const r = Math.floor(idx / 3);

@@ -1,13 +1,13 @@
 # todos
 
 ## current issue
-- [ ] fix wobble while using arrow keys
+- [x] fix wobble while using arrow keys
 
 ## core
-- [ ] two new states: `original_state` (frozen) and `current_state`
-- [ ] on jumble: render org state to side
-- [ ] if user starts playing precompute and show `optimal_step_count` 
-- [ ] user step counter
+- [x] two new states: `original_state` (frozen) and `current_state`
+- [x] on jumble: render org state to side
+- [x] if user starts playing precompute and show `optimal_step_count` 
+- [x] user step counter
 - [ ] Solve From Start and Solve From Here option
 - [ ] Detect completion
 

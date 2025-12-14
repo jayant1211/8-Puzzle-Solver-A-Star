@@ -40,6 +40,40 @@ body {
     margin-top: 40px;
 }
 
+.images{
+    display: flex;
+    /* flex-direction: row; */
+}
+
+.render-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left{
+    padding-right: 60px;
+    color: rgb(0, 198, 0);
+    font-size: small;
+}
+
+.right{
+    padding-left: 60px;
+    font-size: small;
+    color: rgb(0, 104, 169);
+}
+
+.render-text{
+    font-size: small;
+    color: black;
+}
+
+.render-img{
+    width: 250px;
+    height: 250px;
+    padding-bottom: 20px;
+}
+
 .img-section {
     width: 400px;
     height: 400px;
@@ -254,4 +288,5 @@ body {
     .social-link { padding: 0.75rem; }
     .social-icon { width: 32px; height: 32px; }
     .contact-text h2 { font-size: 2rem; }
+    .render-section {display: none;}
 }
