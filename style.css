@@ -64,7 +64,8 @@ body {
 }
 
 .render-text{
-    font-size: small;
+    font-size: medium;
+    text-align: center;
     color: black;
 }
 
@@ -72,6 +73,10 @@ body {
     width: 250px;
     height: 250px;
     padding-bottom: 20px;
+}
+
+.log_user {
+    white-space: pre-line;
 }
 
 .img-section {

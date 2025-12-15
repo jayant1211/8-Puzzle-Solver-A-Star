@@ -18,6 +18,9 @@ const renderR = document.querySelector('#render-r');
 const org_img = document.querySelector('.original-state');
 const curr_img = document.querySelector('.curr-state');
 
+let solved = false;
+let autoMode = false;
+
 import { solve, reconstructPath } from "./a_star.js";
 
 let originalTiles = null;
@@ -239,7 +242,7 @@ function displayLogs_user() {
 
     const log_user = document.createElement('div');
     log_user.className = 'log_user';
-    log_user.textContent = `No of Steps: ${userSteps}`;
+    log_user.textContent = `No of steps taken by user: ${userSteps}`;
     renderR.appendChild(log_user); 
 }
 
@@ -274,6 +277,8 @@ jumble.addEventListener("click", () => {
     // else{
     //     tip.textContent = 'Once jumbled, you can use arrow keys to try and solve the puzzle :)'
     // }
+    solved = false;
+    autoMode = false;
 });
 
 // solve_button.addEventListener("click", () => {
@@ -289,15 +294,19 @@ reset.addEventListener("click", () => {
     const oldLog_user = renderR.querySelector('.log_user');
     if (oldLog_user) oldLog_user.remove();
     goTo(0);
+    solved = false;
+    autoMode = false;
 })
 
 nextBtn.addEventListener("click", () => {
     if (nextBtn.classList.contains("disabled")) return;
+    autoMode = true;
     goTo(currState + 1);
 });
 
 prevBtn.addEventListener("click", () => {
     if (prevBtn.classList.contains("disabled")) return;
+    autoMode = true;
     goTo(currState - 1);
 });
 
@@ -305,23 +314,47 @@ function onOpenCvReady() {
     console.log('cv loaded');
 }
 
-
+// wasd
 document.addEventListener("keydown", (e) => {
-    const allowed = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-    if (!allowed.includes(e.key)) return;
-
+    if (solved || autoMode) return;
     if (!intial_state) return;
 
-    moveBlank(e.key);
+    const keyMap = {
+        ArrowUp: "ArrowUp",
+        ArrowDown: "ArrowDown",
+        ArrowLeft: "ArrowLeft",
+        ArrowRight: "ArrowRight",
+
+        w: "ArrowUp",
+        W: "ArrowUp",
+        s: "ArrowDown",
+        S: "ArrowDown",
+        a: "ArrowLeft",
+        A: "ArrowLeft",
+        d: "ArrowRight",
+        D: "ArrowRight",
+    };
+
+    const mappedKey = keyMap[e.key];
+    if (!mappedKey) return;
+
+    moveBlank(mappedKey);
 });
 
+function isGoalState(state) {
+    return state.every((val, i) => val === goal_state[i]);
+}
+
+function computeScore(userSteps, optimalSteps) {
+    return userSteps <= optimalSteps ? 100 : Math.round(100 * optimalSteps / userSteps);
+}
+
+
 function moveBlank(key) {
+    if(solved || autoMode) return;
     reset.classList.remove('disabled');
     nextBtn.classList.add('disabled');
     let state = [...intial_state];
-
-    userSteps += 1;
-    displayLogs_user(userSteps);
 
     const idx = state.indexOf(0);
     const r = Math.floor(idx / 3);
@@ -329,15 +362,31 @@ function moveBlank(key) {
 
     let swapWith = -1;
 
-    if (key === "ArrowUp" && r < 2) swapWith = idx + 3;
-    if (key === "ArrowDown" && r > 0) swapWith = idx - 3;
-    if (key === "ArrowLeft" && c < 2) swapWith = idx + 1;
-    if (key === "ArrowRight" && c > 0) swapWith = idx - 1;
+    if (key === "ArrowUp" && r < 2) swapWith = idx + 3; 
+    if (key === "ArrowDown" && r > 0) swapWith = idx - 3; 
+    if (key === "ArrowLeft" && c < 2) swapWith = idx + 1; 
+    if (key === "ArrowRight" && c > 0) swapWith = idx - 1; 
 
     if (swapWith === -1) return;
+    
+    userSteps += 1;
+    displayLogs_user(userSteps);
 
     [state[idx], state[swapWith]] = [state[swapWith], state[idx]];
 
     intial_state = state;
     renderState(state);
+
+    if(isGoalState(intial_state)){
+        const oldLog_user = renderR.querySelector('.log_user');
+        if (oldLog_user) oldLog_user.remove();
+
+        const log_user = document.createElement('div');
+        log_user.className = 'log_user';
+        const userScore = computeScore(userSteps, optimalSteps);
+        log_user.textContent = `Congrats!!\nYou completed puzzle in ${userSteps} steps.\nYour Score is ${userScore}`;
+        renderR.appendChild(log_user);
+        tip.textContent = 'Reset and navigate optimal solution';
+        solved = true;
+    }
 }
